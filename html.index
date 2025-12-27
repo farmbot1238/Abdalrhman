@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الامتحانات الدائري - تواريخ الأردن</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a5f7a 0%, #2a9d8f 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .student-info {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .circles-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .circle:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .circle-1 {
+            background: linear-gradient(135deg, #e63946 0%, #ff7b9c 100%);
+        }
+        
+        .circle-2 {
+            background: linear-gradient(135deg, #ff9f1c 0%, #ffbf69 100%);
+        }
+        
+        .circle-3 {
+            background: linear-gradient(135deg, #2a9d8f 0%, #8ac6b8 100%);
+        }
+        
+        .circle-4 {
+            background: linear-gradient(135deg, #7209b7 0%, #b5179e 100%);
+        }
+        
+        .circle-number {
+            font-size: 2.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .circle-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 0 10px;
+        }
+        
+        .circle-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+            text-align: center;
+            padding: 0 10px;
+        }
+        
+        /* قسم الاختبار */
+        .exam-section {
+            display: none;
+        }
+        
+        .exam-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .exam-header {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .exam-title {
+            font-size: 1.8rem;
+            color: #1a5f7a;
+        }
+        
+        .timer-container {
+            background-color: #1a5f7a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+        }
+        
+        .question-counter {
+            background-color: #2a9d8f;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .questions-container {
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #f8f9fa;
+            border-right: 5px solid #2a9d8f;
+            display: none;
+        }
+        
+        .question.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .answer {
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+        
+        .answer:hover {
+            background-color: #f1f3f4;
+            border-color: #adb5bd;
+        }
+        
+        .answer.selected {
+            background-color: #e7f4ff;
+            border-color: #1a5f7a;
+        }
+        
+        .answer-letter {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background-color: #1a5f7a;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            margin-left: 10px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .answer-text {
+            flex-grow: 1;
+            font-size: 1.1rem;
+        }
+        
+        /* أزرار التنقل */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            background-color: #1a5f7a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #144c63;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn:disabled {
+            background-color: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .finish-btn {
+            background-color: #e63946;
+        }
+        
+        .finish-btn:hover {
+            background-color: #d00000;
+        }
+        
+        .back-to-main {
+            background-color: #6c757d;
+        }
+        
+        .back-to-main:hover {
+            background-color: #5a6268;
+        }
+        
+        /* شريط التقدم */
+        .progress-container {
+            margin-bottom: 25px;
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #2a9d8f;
+            width: 5%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a5f7a;
+        }
+        
+        /* صفحة النتائج */
+        .results-section {
+            display: none;
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+        
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .results-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .results-title {
+            font-size: 2.2rem;
+            color: #1a5f7a;
+            margin-bottom: 10px;
+        }
+        
+        .score-container {
+            background: linear-gradient(135deg, #2a9d8f 0%, #1a5f7a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .score-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .score-text {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .score-percentage {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .results-details {
+            margin-bottom: 30px;
+        }
+        
+        .result-item {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-right: 5px solid #2a9d8f;
+            background-color: #f8f9fa;
+        }
+        
+        .result-item.correct {
+            border-right-color: #2a9d8f;
+        }
+        
+        .result-item.incorrect {
+            border-right-color: #e63946;
+        }
+        
+        .question-result-text {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .user-answer, .correct-answer {
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 5px;
+            font-weight: 600;
+        }
+        
+        .user-answer.correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .user-answer.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .correct-answer {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .results-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .result-btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .return-btn {
+            background-color: #1a5f7a;
+            color: white;
+        }
+        
+        .return-btn:hover {
+            background-color: #144c63;
+            transform: translateY(-3px);
+        }
+        
+        .exit-btn {
+            background-color: #e63946;
+            color: white;
+        }
+        
+        .exit-btn:hover {
+            background-color: #d00000;
+            transform: translateY(-3px);
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .instructions {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .circles-container {
+                gap: 20px;
+            }
+            
+            .circle {
+                width: 160px;
+                height: 160px;
+            }
+            
+            .circle-number {
+                font-size: 2.2rem;
+            }
+            
+            .circle-title {
+                font-size: 1.1rem;
+            }
+            
+            .circle-subtitle {
+                font-size: 0.8rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .exam-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-btn {
+                justify-content: center;
+            }
+            
+            .results-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .circle {
+                width: 140px;
+                height: 140px;
+            }
+            
+            .questions-container, .results-section {
+                padding: 20px;
+            }
+            
+            .question {
+                padding: 15px;
+            }
+            
+            .score-number {
+                font-size: 2.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- الواجهة الرئيسية -->
+        <header>
+            <h1><i class="fas fa-history"></i> نظام الامتحانات الدائري - تواريخ الأردن</h1>
+            <p class="subtitle">اختر إحدى الدوائر الأربعة للبدء باختبار التواريخ التاريخية للأردن بناءً على ملخصات الفصل الأول. اختبر معرفتك بالإجابة على الأسئلة المتعلقة بكل فترة زمنية.</p>
+            
+            <div class="student-info">
+                <p><i class="fas fa-user-graduate"></i> إعداد الطالب: عبدالرحمن أحمد المعايطه</p>
+                <p><i class="fas fa-chalkboard-teacher"></i> حسب ملخص الأستاذ: أحمد أبو الصادق وخالد الشمالية</p>
+            </div>
+        </header>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> تعليمات الاختبار</h3>
+            <p>انقر على إحدى الدوائر الأربعة لبدء الاختبار في تلك الفترة الزمنية. كل اختبار يحتوي على 20 سؤال ويجب إكماله خلال 20 دقيقة.</p>
+            <p>ستظهر الأسئلة واحدًا تلو الآخر، ولن تتمكن من رؤية الإجابات الصحيحة إلا بعد انتهاء الاختبار.</p>
+        </div>
+        
+        <!-- الدوائر الأربعة -->
+        <div class="circles-container" id="main-circles">
+            <!-- الدائرة الأولى -->
+            <div class="circle circle-1" data-circle="1">
+                <div class="circle-number">١</div>
+                <div class="circle-title">العصور القديمة</div>
+                <div class="circle-subtitle">ما قبل الميلاد حتى العصر الروماني</div>
+            </div>
+            
+            <!-- الدائرة الثانية -->
+            <div class="circle circle-2" data-circle="2">
+                <div class="circle-number">٢</div>
+                <div class="circle-title">العصور الإسلامية</div>
+                <div class="circle-subtitle">من صلح الحديبية إلى المماليك</div>
+            </div>
+            
+            <!-- الدائرة الثالثة -->
+            <div class="circle circle-3" data-circle="3">
+                <div class="circle-number">٣</div>
+                <div class="circle-title">العصر العثماني</div>
+                <div class="circle-subtitle">معركة مرج دابق حتى الحرب العالمية الأولى</div>
+            </div>
+            
+            <!-- الدائرة الرابعة -->
+            <div class="circle circle-4" data-circle="4">
+                <div class="circle-number">٤</div>
+                <div class="circle-title">الثورة العربية والعهد الحديث</div>
+                <div class="circle-subtitle">الثورة العربية الكبرى وما بعدها</div>
+            </div>
+        </div>
+        
+        <!-- قسم الاختبار -->
+        <div class="exam-section" id="exam-section">
+            <div class="exam-header">
+                <h2 class="exam-title" id="exam-title"></h2>
+                <div class="timer-container">
+                    <i class="fas fa-clock"></i>
+                    <span>الوقت المتبقي: </span>
+                    <span class="timer" id="timer">20:00</span>
+                </div>
+                <div class="question-counter" id="question-counter">السؤال 1 من 20</div>
+            </div>
+            
+            <!-- شريط التقدم -->
+            <div class="progress-container">
+                <div class="progress-text">
+                    <span>تقدم الاختبار</span>
+                    <span id="progress-percentage">5%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="progress-bar"></div>
+                </div>
+            </div>
+            
+            <!-- أسئلة الاختبار -->
+            <div class="questions-container" id="questions-container">
+                <!-- سيتم إنشاء الأسئلة ديناميكيًا -->
+            </div>
+            
+            <!-- أزرار التنقل -->
+            <div class="navigation-buttons">
+                <button class="nav-btn" id="prev-btn" disabled>
+                    <i class="fas fa-arrow-right"></i> السابق
+                </button>
+                <div>
+                    <button class="nav-btn back-to-main" id="back-to-main-btn">
+                        <i class="fas fa-home"></i> العودة للقائمة
+                    </button>
+                    <button class="nav-btn finish-btn" id="finish-btn" style="display: none;">
+                        <i class="fas fa-flag-checkered"></i> إنهاء الاختبار
+                    </button>
+                </div>
+                <button class="nav-btn" id="next-btn">
+                    التالي <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- صفحة النتائج -->
+        <div class="results-section" id="results-section">
+            <div class="results-header">
+                <h2 class="results-title">نتيجة الاختبار</h2>
+                <p id="results-subtitle"></p>
+            </div>
+            
+            <div class="score-container">
+                <div class="score-number" id="final-score">0/20</div>
+                <div class="score-text" id="score-text">نتيجتك</div>
+                <div class="score-percentage" id="score-percentage">0%</div>
+            </div>
+            
+            <div class="results-details" id="results-details">
+                <!-- سيتم ملء النتائج تفصيليًا هنا -->
+            </div>
+            
+            <div class="results-buttons">
+                <button class="result-btn return-btn" id="return-to-main-btn">
+                    <i class="fas fa-home"></i> العودة للقائمة الرئيسية
+                </button>
+                <button class="result-btn exit-btn" id="exit-btn">
+                    <i class="fas fa-door-open"></i> خروج
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>تم إنشاء هذا النظام التعليمي بناءً على ملف "ملخص تواريخ الفصل الأول كامل"</p>
+            <p>إعداد الطالب: عبدالرحمن أحمد المعايطه - حسب ملخص الأستاذ أحمد أبو الصادق وخالد الشمالية</p>
+            <p>نظام الامتحانات الدائري - جميع الحقوق محفوظة &copy; ٢٠٢٣</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // البيانات الأساسية
+            const examData = {
+                1: {
+                    title: "اختبار العصور القديمة",
+                    questions: []
+                },
+                2: {
+                    title: "اختبار العصور الإسلامية",
+                    questions: []
+                },
+                3: {
+                    title: "اختبار العصر العثماني",
+                    questions: []
+                },
+                4: {
+                    title: "اختبار الثورة العربية والعهد الحديث",
+                    questions: []
+                }
+            };
+            
+            // تعبئة الأسئلة (20 سؤال لكل قسم)
+            // يمكن توسيع هذه القائمة لإضافة المزيد من الأسئلة
+            const allQuestions = {
+                1: [
+                    {question: "في أي عام اخترعت الكتابة حسب الملخص؟", answers: ["حوالي 3500 قبل الميلاد", "حوالي 3000 قبل الميلاد", "حوالي 2000 قبل الميلاد", "حوالي 4500 قبل الميلاد"], correct: 0},
+                    {question: "متى اكتشف الرحالة السويسري بيركهاوت البتراء؟", answers: ["عام 1800", "عام 1812", "عام 1825", "عام 1798"], correct: 1},
+                    {question: "متى أدرجت البتراء على لائحة التراث العالمي؟", answers: ["عام 1975", "عام 1995", "عام 1985", "عام 2000"], correct: 2},
+                    {question: "متى احتل الإمبراطور الروماني تراجان البتراء؟", answers: ["عام 106 ميلادي", "عام 64 ميلادي", "عام 332 ميلادي", "عام 395 ميلادي"], correct: 0},
+                    {question: "متى دخلت المملكة الأموية تحت السيطرة الفارسية؟", answers: ["عام 539 قبل الميلاد", "عام 332 قبل الميلاد", "عام 64 ميلادي", "عام 106 ميلادي"], correct: 0},
+                    {question: "متى سقطت الدولة البابلية (الكندانية) على يد الفرس؟", answers: ["عام 539 قبل الميلاد", "عام 332 قبل الميلاد", "عام 64 ميلادي", "عام 106 ميلادي"], correct: 0},
+                    {question: "متى صارت المملكة الأموية تابعاً للأشوريين؟", answers: ["القرن 8 قبل الميلاد", "القرن 6 قبل الميلاد", "القرن 4 قبل الميلاد", "القرن 2 قبل الميلاد"], correct: 0},
+                    {question: "متى أدرجت أم الرصاص على لائحة التراث العالمي؟", answers: ["عام 2004", "عام 2015", "عام 1985", "عام 2007"], correct: 0},
+                    {question: "متى أدرج موقع المغطس على لائحة التراث العالمي؟", answers: ["عام 2004", "عام 2015", "عام 1985", "عام 2007"], correct: 1},
+                    {question: "متى اختيرت البتراء كواحدة من عجائب الدنيا السبع الجديدة؟", answers: ["عام 2000", "عام 2007", "عام 2012", "عام 2015"], correct: 1},
+                    {question: "متى أدرجت مدينة أم الجمال على لائحة التراث العالمي؟", answers: ["عام 2024", "عام 2015", "عام 2007", "عام 2012"], correct: 0},
+                    {question: "متى اكتشف نفق اليرموك في شمال الأردن؟", answers: ["عام 2000", "عام 2007", "عام 2012", "عام 2015"], correct: 2},
+                    {question: "متى تأسست سلطة إقليم البتراء التنموي السياحي؟", answers: ["عام 2000", "عام 2007", "عام 2012", "عام 2016"], correct: 3},
+                    {question: "متى سقطت الإمبراطورية الرومانية الغربية؟", answers: ["عام 395 ميلادي", "عام 476 ميلادي", "عام 332 ميلادي", "عام 64 ميلادي"], correct: 1},
+                    {question: "أين توجد أقدم خريطة فسيفسائية أصلية للأراضي المقدسة؟", answers: ["كنيسة الروم الأرثوذكس في مادبا", "كنيسة المغطس", "كنيسة أم الرصاص", "كنيسة البتراء"], correct: 0},
+                    {question: "متى بدأت الحضارة الرومانية في الأردن؟", answers: ["عام 64 ميلادي", "عام 106 ميلادي", "عام 332 ميلادي", "عام 395 ميلادي"], correct: 0},
+                    {question: "متى بدأت الحقبة البيزنطية في الأردن؟", answers: ["عام 64 ميلادي", "عام 332 ميلادي", "عام 395 ميلادي", "عام 476 ميلادي"], correct: 2},
+                    {question: "متى احتل القائد الروماني بومبي بلاد الشام؟", answers: ["عام 64 قبل الميلاد", "عام 64 ميلادي", "عام 106 ميلادي", "عام 332 ميلادي"], correct: 0},
+                    {question: "متى بقيت دولة الأنباط مستقلة حتى احتلال الرومان؟", answers: ["عام 64 ميلادي", "عام 106 ميلادي", "عام 209 ميلادي", "عام 332 ميلادي"], correct: 1},
+                    {question: "متى حل البابيون محل الأموريين؟", answers: ["القرن 8 قبل الميلاد", "القرن 6 قبل الميلاد", "القرن 4 قبل الميلاد", "القرن 2 قبل الميلاد"], correct: 1}
+                ],
+                2: [
+                    {question: "في أي عام حدثت معركة مؤتة؟", answers: ["السنة الخامسة للهجرة", "السنة السابعة للهجرة", "السنة الثامنة للهجرة", "السنة التاسعة للهجرة"], correct: 2},
+                    {question: "متى حدثت معركة اليرموك؟", answers: ["عام 12 هـ", "عام 15 هـ", "عام 18 هـ", "عام 20 هـ"], correct: 1},
+                    {question: "متى شيد الأيوبيون قلعة عجلون؟", answers: ["عام 1150 ميلادي", "عام 1184 ميلادي", "عام 1200 ميلادي", "عام 1220 ميلادي"], correct: 1},
+                    {question: "متى حدثت معركة عين جالوت؟", answers: ["عام 1260 ميلادي", "عام 1250 ميلادي", "عام 1270 ميلادي", "عام 1240 ميلادي"], correct: 0},
+                    {question: "متى حدثت معركة حطين؟", answers: ["عام 1187 ميلادي", "عام 1184 ميلادي", "عام 1192 ميلادي", "عام 1200 ميلادي"], correct: 0},
+                    {question: "متى احتل الأفرنج القدس؟", answers: ["عام 1099 ميلادي", "عام 1187 ميلادي", "عام 1192 ميلادي", "عام 1200 ميلادي"], correct: 0},
+                    {question: "متى حدثت معركة الزاب؟", answers: ["عام 750 ميلادي", "عام 751 ميلادي", "عام 752 ميلادي", "عام 753 ميلادي"], correct: 0},
+                    {question: "متى دمر المغول بغداد؟", answers: ["عام 1250 ميلادي", "عام 1258 ميلادي", "عام 1260 ميلادي", "عام 1270 ميلادي"], correct: 1},
+                    {question: "متى أرسل الرسول أول سرية خارج الجزيرة العربية إلى منطقة حسمي؟", answers: ["السنة السادسة للهجرة", "السنة السابعة للهجرة", "السنة الثامنة للهجرة", "السنة التاسعة للهجرة"], correct: 0},
+                    {question: "متى أرسل أبو بكر الصديق جيشًا بقيادة أسامة بن زيد إلى الأردن؟", answers: ["عام 11 هـ", "عام 12 هـ", "عام 13 هـ", "عام 14 هـ"], correct: 2},
+                    {question: "متى قسمت بلاد الشام إلى أربع أجناد في عهد عمر بن الخطاب؟", answers: ["عام 15 هـ", "عام 18 هـ", "عام 20 هـ", "عام 22 هـ"], correct: 1},
+                    {question: "متى تأسست جامعة اليرموك؟", answers: ["عام 1976", "عام 1980", "عام 1985", "عام 1990"], correct: 0},
+                    {question: "متى تأسست جامعة مؤتة؟", answers: ["عام 1981", "عام 1985", "عام 1990", "عام 1995"], correct: 0},
+                    {question: "متى أدرج قصير عمرة على لائحة التراث العالمي؟", answers: ["عام 1985", "عام 1995", "عام 2005", "عام 2015"], correct: 0},
+                    {question: "متى اكتشف آثار مدينة العقبة الإسلامية؟", answers: ["عام 1990", "عام 1995", "عام 2000", "عام 2005"], correct: 3},
+                    {question: "متى حدثت ثورة سعيد بن خالد الأموي؟", answers: ["عام 750 ميلادي", "عام 751 ميلادي", "عام 752 ميلادي", "عام 753 ميلادي"], correct: 1},
+                    {question: "متى استمرت الدولة الأيوبية؟", answers: ["1174-1250", "1187-1250", "1193-1250", "1200-1250"], correct: 0},
+                    {question: "متى هاجم المغول أرض دمشق؟", answers: ["عام 1250 ميلادي", "عام 1258 ميلادي", "عام 1260 ميلادي", "عام 1270 ميلادي"], correct: 2},
+                    {question: "متى حدثت معركة طبقة فحل؟", answers: ["عام 13 هـ", "عام 15 هـ", "عام 18 هـ", "عام 20 هـ"], correct: 0},
+                    {question: "متى حدثت معركة أجنادين؟", answers: ["عام 13 هـ", "عام 15 هـ", "عام 18 هـ", "عام 20 هـ"], correct: 0}
+                ],
+                3: [
+                    {question: "متى حدثت معركة مرج دابق؟", answers: ["عام 1516 ميلادي", "عام 1520 ميلادي", "عام 1500 ميلادي", "عام 1490 ميلادي"], correct: 0},
+                    {question: "متى اندلعت الحرب العالمية الأولى؟", answers: ["عام 1912 ميلادي", "عام 1915 ميلادي", "عام 1914 ميلادي", "عام 1916 ميلادي"], correct: 2},
+                    {question: "متى حدث تمرد بني حميدة؟", answers: ["عام 1875 ميلادي", "عام 1889 ميلادي", "عام 1900 ميلادي", "عام 1895 ميلادي"], correct: 1},
+                    {question: "متى بدأ العمل بخط الحديد الحجازي؟", answers: ["عام 1895 ميلادي", "عام 1905 ميلادي", "عام 1900 ميلادي", "عام 1910 ميلادي"], correct: 2},
+                    {question: "متى حدث تمرد الكرك (الهيئة)؟", answers: ["عام 1900 ميلادي", "عام 1905 ميلادي", "عام 1910 ميلادي", "عام 1915 ميلادي"], correct: 2},
+                    {question: "متى حدث تمرد الشويك؟", answers: ["عام 1900 ميلادي", "عام 1905 ميلادي", "عام 1910 ميلادي", "عام 1915 ميلادي"], correct: 1},
+                    {question: "متى حدث التمرد على حكم إبراهيم باشا في البلقاء والكرك؟", answers: ["عام 1831 ميلادي", "عام 1834 ميلادي", "عام 1839 ميلادي", "عام 1840 ميلادي"], correct: 1},
+                    {question: "متى حدث التمرد على حكم إبراهيم باشا في عجلون؟", answers: ["عام 1831 ميلادي", "عام 1834 ميلادي", "عام 1839 ميلادي", "عام 1840 ميلادي"], correct: 2},
+                    {question: "متى تشكل قضاء معان الذي تحول إلى لواء الكرك؟", answers: ["عام 1889 ميلادي", "عام 1894 ميلادي", "عام 1900 ميلادي", "عام 1905 ميلادي"], correct: 1},
+                    {question: "متى صدر قانون الولايات العثماني؟", answers: ["عام 1864 ميلادي", "عام 1876 ميلادي", "عام 1889 ميلادي", "عام 1900 ميلادي"], correct: 0},
+                    {question: "متى انتهى العمل من خط الحديد الحجازي؟", answers: ["عام 1908 ميلادي", "عام 1910 ميلادي", "عام 1912 ميلادي", "عام 1914 ميلادي"], correct: 0},
+                    {question: "متى استولى حزب الاتحاد والترقي على الحكم في الدولة العثمانية؟", answers: ["عام 1908 ميلادي", "عام 1910 ميلادي", "عام 1912 ميلادي", "عام 1914 ميلادي"], correct: 0},
+                    {question: "متى عين الشريف حسين أميراً على مكة؟", answers: ["عام 1908 ميلادي", "عام 1910 ميلادي", "عام 1912 ميلادي", "عام 1914 ميلادي"], correct: 0},
+                    {question: "متى ولد الشريف حسين؟", answers: ["عام 1853 ميلادي", "عام 1856 ميلادي", "عام 1859 ميلادي", "عام 1862 ميلادي"], correct: 0},
+                    {question: "متى توفي الشريف حسين؟", answers: ["عام 1925 ميلادي", "عام 1931 ميلادي", "عام 1935 ميلادي", "عام 1940 ميلادي"], correct: 1},
+                    {question: "متى نفي الشريف حسين بن علي إلى إسطنبول؟", answers: ["عام 1893 ميلادي", "عام 1895 ميلادي", "عام 1898 ميلادي", "عام 1900 ميلادي"], correct: 0},
+                    {question: "متى تمت مشاورات بين الأمير عبدالله ومعتمد بريطانيا في مصر؟", answers: ["عام 1914 ميلادي", "عام 1915 ميلادي", "عام 1916 ميلادي", "عام 1917 ميلادي"], correct: 1},
+                    {question: "متى تأسست الجمعية العربية الفتاة؟", answers: ["عام 1911 ميلادي", "عام 1912 ميلادي", "عام 1913 ميلادي", "عام 1914 ميلادي"], correct: 0},
+                    {question: "متى أعدم جمال باشا السفاح عدداً من رجالات العرب؟", answers: ["عام 1915 ميلادي", "عام 1916 ميلادي", "عام 1917 ميلادي", "عام 1918 ميلادي"], correct: 1},
+                    {question: "متى كان الحكم المصري لبلاد الشام؟", answers: ["1831-1840", "1835-1845", "1820-1830", "1840-1850"], correct: 0}
+                ],
+                4: [
+                    {question: "متى بدأت الثورة العربية الكبرى؟", answers: ["عام 1915 ميلادي", "عام 1916 ميلادي", "عام 1917 ميلادي", "عام 1918 ميلادي"], correct: 1},
+                    {question: "متى وصلت قوات الثورة العربية الكبرى إلى العقبة؟", answers: ["عام 1916 ميلادي", "عام 1917 ميلادي", "عام 1918 ميلادي", "عام 1919 ميلادي"], correct: 1},
+                    {question: "متى ولد الملك عبدالله بن الحسين الأول؟", answers: ["عام 1880 ميلادي", "عام 1882 ميلادي", "عام 1884 ميلادي", "عام 1878 ميلادي"], correct: 1},
+                    {question: "متى عقد المؤتمر العربي الأول في باريس؟", answers: ["عام 1913 ميلادي", "عام 1911 ميلادي", "عام 1915 ميلادي", "عام 1909 ميلادي"], correct: 0},
+                    {question: "متى دخلت فصائل من قوات الثورة العربية الكبرى إلى دمشق؟", answers: ["عام 1916 ميلادي", "عام 1917 ميلادي", "عام 1918 ميلادي", "عام 1919 ميلادي"], correct: 2},
+                    {question: "متى حدثت معارك معان؟", answers: ["عام 1916 ميلادي", "عام 1917 ميلادي", "عام 1918 ميلادي", "عام 1919 ميلادي"], correct: 2},
+                    {question: "متى ولد الملك علي بن الحسين؟", answers: ["عام 1879 ميلادي", "عام 1880 ميلادي", "عام 1881 ميلادي", "عام 1882 ميلادي"], correct: 2},
+                    {question: "متى ولد الملك فيصل بن الحسين؟", answers: ["عام 1881 ميلادي", "عام 1882 ميلادي", "عام 1883 ميلادي", "عام 1884 ميلادي"], correct: 2},
+                    {question: "متى ولد الأمير زيد بن الحسين؟", answers: ["عام 1896 ميلادي", "عام 1897 ميلادي", "عام 1898 ميلادي", "عام 1899 ميلادي"], correct: 2},
+                    {question: "متى عقد مؤتمر سان ريمو؟", answers: ["عام 1919 ميلادي", "عام 1920 ميلادي", "عام 1921 ميلادي", "عام 1922 ميلادي"], correct: 1},
+                    {question: "متى حدثت معركة ميسلون؟", answers: ["عام 1919 ميلادي", "عام 1920 ميلادي", "عام 1921 ميلادي", "عام 1922 ميلادي"], correct: 1},
+                    {question: "متى عقد المؤتمر السوري العام في دمشق؟", answers: ["عام 1919 ميلادي", "عام 1920 ميلادي", "عام 1921 ميلادي", "عام 1922 ميلادي"], correct: 1},
+                    {question: "متى حدثت معركة تل الثعالب؟", answers: ["عام 1920 ميلادي", "عام 1921 ميلادي", "عام 1922 ميلادي", "عام 1923 ميلادي"], correct: 1},
+                    {question: "متى حدثت ثورة جبل حوران؟", answers: ["عام 1920 ميلادي", "عام 1921 ميلادي", "عام 1922 ميلادي", "عام 1923 ميلادي"], correct: 1},
+                    {question: "متى عقد مؤتمر قمة في محافظة إربد؟", answers: ["عام 1920 ميلادي", "عام 1921 ميلادي", "عام 1922 ميلادي", "عام 1923 ميلادي"], correct: 2},
+                    {question: "متى عقد اجتماع أم قيس؟", answers: ["عام 1920 ميلادي", "عام 1921 ميلادي", "عام 1922 ميلادي", "عام 1923 ميلادي"], correct: 1},
+                    {question: "متى تم توقيع اتفاقية سايكس بيكو؟", answers: ["عام 1915 ميلادي", "عام 1916 ميلادي", "عام 1917 ميلادي", "عام 1918 ميلادي"], correct: 1},
+                    {question: "متى صدر وعد بلفور؟", answers: ["عام 1916 ميلادي", "عام 1917 ميلادي", "عام 1918 ميلادي", "عام 1919 ميلادي"], correct: 1},
+                    {question: "متى عقد المؤتمر الصهيوني الأول في بازل؟", answers: ["عام 1896 ميلادي", "عام 1897 ميلادي", "عام 1898 ميلادي", "عام 1899 ميلادي"], correct: 1},
+                    {question: "متى بحث مجلس الحلفاء مستقبل البلاد العربية في مؤتمر الصلح؟", answers: ["عام 1919 ميلادي", "عام 1920 ميلادي", "عام 1921 ميلادي", "عام 1922 ميلادي"], correct: 0}
+                ]
+            };
+            
+            // تعيين الأسئلة
+            for (let i = 1; i <= 4; i++) {
+                examData[i].questions = allQuestions[i];
+            }
+            
+            // عناصر DOM
+            const mainCircles = document.getElementById('main-circles');
+            const examSection = document.getElementById('exam-section');
+            const resultsSection = document.getElementById('results-section');
+            const examTitle = document.getElementById('exam-title');
+            const timerElement = document.getElementById('timer');
+            const questionCounter = document.getElementById('question-counter');
+            const questionsContainer = document.getElementById('questions-container');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const finishBtn = document.getElementById('finish-btn');
+            const backToMainBtn = document.getElementById('back-to-main-btn');
+            const returnToMainBtn = document.getElementById('return-to-main-btn');
+            const exitBtn = document.getElementById('exit-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercentage = document.getElementById('progress-percentage');
+            const finalScore = document.getElementById('final-score');
+            const scoreText = document.getElementById('score-text');
+            const scorePercentage = document.getElementById('score-percentage');
+            const resultsSubtitle = document.getElementById('results-subtitle');
+            const resultsDetails = document.getElementById('results-details');
+            
+            // متغيرات الاختبار
+            let currentExam = null;
+            let currentQuestionIndex = 0;
+            let userAnswers = [];
+            let timerInterval = null;
+            let timeLeft = 20 * 60; // 20 دقيقة بالثواني
+            
+            // تهيئة التطبيق
+            initApp();
+            
+            function initApp() {
+                // إضافة أحداث للنقر على الدوائر
+                document.querySelectorAll('.circle').forEach(circle => {
+                    circle.addEventListener('click', startExam);
+                });
+                
+                // إضافة أحداث للأزرار
+                prevBtn.addEventListener('click', showPreviousQuestion);
+                nextBtn.addEventListener('click', showNextQuestion);
+                finishBtn.addEventListener('click', finishExam);
+                backToMainBtn.addEventListener('click', backToMain);
+                returnToMainBtn.addEventListener('click', backToMain);
+                exitBtn.addEventListener('click', exitApp);
+            }
+            
+            function startExam(event) {
+                const circleNumber = parseInt(event.currentTarget.getAttribute('data-circle'));
+                currentExam = circleNumber;
+                
+                // إخفاء الدوائر وإظهار قسم الاختبار
+                mainCircles.style.display = 'none';
+                examSection.classList.add('active');
+                
+                // تعيين عنوان الاختبار
+                examTitle.textContent = examData[currentExam].title;
+                resultsSubtitle.textContent = examData[currentExam].title;
+                
+                // تهيئة إجابات المستخدم
+                userAnswers = new Array(examData[currentExam].questions.length).fill(null);
+                
+                // إعادة تعيين مؤشر السؤال
+                currentQuestionIndex = 0;
+                
+                // إنشاء الأسئلة في الواجهة
+                createQuestions();
+                
+                // عرض السؤال الأول
+                showQuestion(currentQuestionIndex);
+                
+                // بدء المؤقت
+                startTimer();
+                
+                // تحديث أزرار التنقل
+                updateNavigationButtons();
+            }
+            
+            function createQuestions() {
+                questionsContainer.innerHTML = '';
+                const questions = examData[currentExam].questions;
+                
+                questions.forEach((question, index) => {
+                    const questionElement = document.createElement('div');
+                    questionElement.className = 'question';
+                    questionElement.id = `question-${index}`;
+                    
+                    const questionText = document.createElement('div');
+                    questionText.className = 'question-text';
+                    questionText.textContent = `${index + 1}. ${question.question}`;
+                    
+                    const answersContainer = document.createElement('div');
+                    answersContainer.className = 'answers';
+                    
+                    // إضافة الإجابات
+                    question.answers.forEach((answer, answerIndex) => {
+                        const answerElement = document.createElement('div');
+                        answerElement.className = 'answer';
+                        answerElement.dataset.index = answerIndex;
+                        
+                        const answerText = document.createElement('span');
+                        answerText.className = 'answer-text';
+                        answerText.textContent = answer;
+                        
+                        const answerLetter = document.createElement('span');
+                        answerLetter.className = 'answer-letter';
+                        answerLetter.textContent = String.fromCharCode(1570 + answerIndex); // أحرف عربية
+                        
+                        answerElement.appendChild(answerText);
+                        answerElement.appendChild(answerLetter);
+                        
+                        // إضافة حدث النقر على الإجابة
+                        answerElement.addEventListener('click', () => selectAnswer(index, answerIndex));
+                        
+                        answersContainer.appendChild(answerElement);
+                    });
+                    
+                    questionElement.appendChild(questionText);
+                    questionElement.appendChild(answersContainer);
+                    
+                    questionsContainer.appendChild(questionElement);
+                });
+            }
+            
+            function showQuestion(index) {
+                // إخفاء جميع الأسئلة
+                document.querySelectorAll('.question').forEach(q => {
+                    q.classList.remove('active');
+                });
+                
+                // إظهار السؤال الحالي
+                document.getElementById(`question-${index}`).classList.add('active');
+                
+                // تحديث عداد الأسئلة
+                questionCounter.textContent = `السؤال ${index + 1} من ${examData[currentExam].questions.length}`;
+                
+                // تحديث شريط التقدم
+                const progress = ((index + 1) / examData[currentExam].questions.length) * 100;
+                progressBar.style.width = `${progress}%`;
+                progressPercentage.textContent = `${Math.round(progress)}%`;
+                
+                // تحديث أزرار التنقل
+                updateNavigationButtons();
+                
+                // تلوين الإجابات المختارة مسبقًا
+                if (userAnswers[index] !== null) {
+                    const answers = document.querySelectorAll(`#question-${index} .answer`);
+                    answers.forEach((answer, answerIndex) => {
+                        if (answerIndex === userAnswers[index]) {
+                            answer.classList.add('selected');
+                        }
+                    });
+                }
+            }
+            
+            function selectAnswer(questionIndex, answerIndex) {
+                // حفظ إجابة المستخدم
+                userAnswers[questionIndex] = answerIndex;
+                
+                // تحديث عرض الإجابة المختارة
+                const answers = document.querySelectorAll(`#question-${questionIndex} .answer`);
+                answers.forEach((answer, idx) => {
+                    answer.classList.remove('selected');
+                    if (idx === answerIndex) {
+                        answer.classList.add('selected');
+                    }
+                });
+                
+                // تحديث أزرار التنقل
+                updateNavigationButtons();
+            }
+            
+            function showPreviousQuestion() {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    showQuestion(currentQuestionIndex);
+                }
+            }
+            
+            function showNextQuestion() {
+                if (currentQuestionIndex < examData[currentExam].questions.length - 1) {
+                    currentQuestionIndex++;
+                    showQuestion(currentQuestionIndex);
+                }
+            }
+            
+            function updateNavigationButtons() {
+                // تحديث زر السابق
+                prevBtn.disabled = currentQuestionIndex === 0;
+                
+                // تحديث زر التالي
+                const isLastQuestion = currentQuestionIndex === examData[currentExam].questions.length - 1;
+                nextBtn.disabled = isLastQuestion;
+                
+                // إظهار زر إنهاء الاختبار إذا كان السؤال الأخير
+                finishBtn.style.display = isLastQuestion ? 'inline-block' : 'none';
+                
+                // التحقق من إجابة السؤال الحالي
+                const isCurrentAnswered = userAnswers[currentQuestionIndex] !== null;
+                nextBtn.disabled = isLastQuestion ? true : !isCurrentAnswered;
+                
+                // إذا كان السؤال الأخير، التحقق من إجابته قبل تمكين زر الإنهاء
+                if (isLastQuestion) {
+                    finishBtn.disabled = !isCurrentAnswered;
+                }
+            }
+            
+            function startTimer() {
+                timeLeft = 20 * 60; // 20 دقيقة
+                updateTimerDisplay();
+                
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        finishExam();
+                    }
+                }, 1000);
+            }
+            
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // تغيير اللون عندما يقل الوقت عن 5 دقائق
+                if (timeLeft < 5 * 60) {
+                    timerElement.style.color = '#e63946';
+                }
+            }
+            
+            function finishExam() {
+                // إيقاف المؤقت
+                clearInterval(timerInterval);
+                
+                // إخفاء قسم الاختبار
+                examSection.classList.remove('active');
+                
+                // إظهار قسم النتائج
+                resultsSection.classList.add('active');
+                
+                // حساب النتيجة
+                calculateResults();
+            }
+            
+            function calculateResults() {
+                const questions = examData[currentExam].questions;
+                let correctCount = 0;
+                
+                // حساب عدد الإجابات الصحيحة
+                userAnswers.forEach((answer, index) => {
+                    if (answer === questions[index].correct) {
+                        correctCount++;
+                    }
+                });
+                
+                // حساب النسبة المئوية
+                const percentage = (correctCount / questions.length) * 100;
+                
+                // تحديث عرض النتيجة
+                finalScore.textContent = `${correctCount}/${questions.length}`;
+                scorePercentage.textContent = `${percentage.toFixed(1)}%`;
+                
+                // تحديث نص النتيجة
+                let resultText = "";
+                if (percentage >= 90) {
+                    resultText = "ممتاز! نتيجة رائعة";
+                } else if (percentage >= 80) {
+                    resultText = "جيد جدًا! أحسنت";
+                } else if (percentage >= 70) {
+                    resultText = "جيد! يمكنك التحسين";
+                } else if (percentage >= 60) {
+                    resultText = "مقبول! تحتاج للمزيد من الدراسة";
+                } else {
+                    resultText = "راسب! تحتاج لدراسة أكثر";
+                }
+                
+                scoreText.textContent = resultText;
+                
+                // عرض التفاصيل
+                displayResultsDetails(correctCount, questions.length);
+            }
+            
+            function displayResultsDetails(correctCount, totalQuestions) {
+                resultsDetails.innerHTML = '';
+                
+                const questions = examData[currentExam].questions;
+                
+                questions.forEach((question, index) => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = `result-item ${userAnswers[index] === question.correct ? 'correct' : 'incorrect'}`;
+                    
+                    const questionText = document.createElement('div');
+                    questionText.className = 'question-result-text';
+                    questionText.textContent = `${index + 1}. ${question.question}`;
+                    
+                    const userAnswerDiv = document.createElement('div');
+                    userAnswerDiv.innerHTML = `<strong>إجابتك:</strong> `;
+                    
+                    const userAnswerSpan = document.createElement('span');
+                    userAnswerSpan.className = `user-answer ${userAnswers[index] === question.correct ? 'correct' : 'incorrect'}`;
+                    
+                    if (userAnswers[index] !== null) {
+                        userAnswerSpan.textContent = question.answers[userAnswers[index]];
+                    } else {
+                        userAnswerSpan.textContent = "لم تجب على هذا السؤال";
+                        userAnswerSpan.classList.add('incorrect');
+                    }
+                    
+                    userAnswerDiv.appendChild(userAnswerSpan);
+                    
+                    const correctAnswerDiv = document.createElement('div');
+                    correctAnswerDiv.innerHTML = `<strong>الإجابة الصحيحة:</strong> `;
+                    
+                    const correctAnswerSpan = document.createElement('span');
+                    correctAnswerSpan.className = 'correct-answer';
+                    correctAnswerSpan.textContent = question.answers[question.correct];
+                    
+                    correctAnswerDiv.appendChild(correctAnswerSpan);
+                    
+                    resultItem.appendChild(questionText);
+                    resultItem.appendChild(userAnswerDiv);
+                    resultItem.appendChild(correctAnswerDiv);
+                    
+                    resultsDetails.appendChild(resultItem);
+                });
+            }
+            
+            function backToMain() {
+                // إخفاء قسم النتائج وقسم الاختبار
+                resultsSection.classList.remove('active');
+                examSection.classList.remove('active');
+                
+                // إظهار الدوائر الرئيسية
+                mainCircles.style.display = 'flex';
+                
+                // إيقاف المؤقت
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                
+                // إعادة تعيين المتغيرات
+                currentExam = null;
+                currentQuestionIndex = 0;
+                userAnswers = [];
+            }
+            
+            function exitApp() {
+                if (confirm("هل تريد الخروج من النظام؟")) {
+                    // يمكن إضافة إجراءات إضافية هنا
+                    alert("شكراً لاستخدامك نظام الامتحانات الدائري. نتمنى لك التوفيق!");
+                }
+            }
+            
+            // إظهار رسالة ترحيب
+            setTimeout(() => {
+                alert("مرحباً بك في نظام الامتحانات الدائري لتواريخ الأردن!\n\nإعداد الطالب: عبدالرحمن أحمد المعايطه\n\nانقر على إحدى الدوائر الأربعة للبدء بالاختبار.");
+            }, 500);
+        });
+    </script>
+</body>
+</html>
